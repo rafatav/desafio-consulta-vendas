@@ -9,6 +9,8 @@ import java.util.Optional;
 import com.devsuperior.dsmeta.dto.SaleReportDTO;
 import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +30,20 @@ public class SaleService {
 		return new SaleMinDTO(entity);
 	}
 
-	public List<SaleReportDTO> getReport(String name, String minDate, String maxDate) {
+	public Page<SaleReportDTO> getReport(String name, String minDate, String maxDate, Pageable pageable) {
 		Pair<LocalDate, LocalDate> dates = instantiateLocalData(minDate, maxDate);
-		return repository.searchReport(name, dates.getFirst(), dates.getSecond());
+		return repository.searchReport(name, dates.getFirst(), dates.getSecond(), pageable);
 	}
 
-	public List<SaleSummaryDTO> getSummary(String minDate, String maxDate) {
+	public Page<SaleSummaryDTO> getSummary(String minDate, String maxDate, Pageable pageable) {
 		Pair<LocalDate, LocalDate> dates = instantiateLocalData(minDate, maxDate);
-		return repository.searchSummary(dates.getFirst(), dates.getSecond());
+		return repository.searchSummary(dates.getFirst(), dates.getSecond(), pageable);
 	}
 
 	private Pair<LocalDate, LocalDate> instantiateLocalData(String min, String max) {
 		LocalDate today = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
-		LocalDate minDate = (!min.isEmpty()) ? minDate = LocalDate.parse(min) : today.minusYears(1L);
-		LocalDate maxDate = (!max.isEmpty()) ? maxDate = LocalDate.parse(max) : today;
+		LocalDate minDate = (!min.isEmpty()) ? LocalDate.parse(min) : today.minusYears(1L);
+		LocalDate maxDate = (!max.isEmpty()) ? LocalDate.parse(max) : today;
 		return Pair.of(minDate, maxDate);
 	}
 }
