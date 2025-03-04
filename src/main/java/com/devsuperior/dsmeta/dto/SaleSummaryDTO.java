@@ -1,7 +1,5 @@
 package com.devsuperior.dsmeta.dto;
 
-import com.devsuperior.dsmeta.entities.Sale;
-
 public class SaleSummaryDTO {
 
     private String sellerName;
